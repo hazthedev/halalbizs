@@ -120,15 +120,20 @@ export async function bagistoFetch<T>({
   isCookies?: boolean;
 }): Promise<{ status: number; body: T } | never> {
   try {
-   
     let bagistoCartId = "";
     if (isCookies) {
       const cookieStore = await cookies();
       bagistoCartId = cookieStore.get(BAGISTO_SESSION)?.value ?? "";
     }
 
-    const sessions = await getServerSession(authOptions);
-    const accessToken = sessions?.user?.accessToken;
+    let accessToken = "";
+    try {
+      const sessions = await getServerSession(authOptions);
+      accessToken = sessions?.user?.accessToken || "";
+    } catch (sessionError) {
+      // Session fetch failed, continue without access token
+      console.warn("Failed to get session:", sessionError);
+    }
 
     const result = await fetch(endpoint, {
       method: "POST",
