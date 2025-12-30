@@ -89,9 +89,16 @@ import { getProductsUrlQuery } from "./queries/product/product-urls";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
 
-const domain = process.env.BAGISTO_STORE_DOMAIN || "https://demo.halalbizs.com";
+const DEFAULT_DOMAIN = "https://demo.halalbizs.com";
+const domain = process.env.BAGISTO_STORE_DOMAIN || DEFAULT_DOMAIN;
 
 const endpoint = `${domain}${BAGISTO_GRAPHQL_API_ENDPOINT}`;
+
+// Helper function to get the endpoint with fallback
+export const getBagistoEndpoint = () => {
+  const envDomain = process.env.BAGISTO_STORE_DOMAIN;
+  return envDomain ? `${envDomain}${BAGISTO_GRAPHQL_API_ENDPOINT}` : `${DEFAULT_DOMAIN}${BAGISTO_GRAPHQL_API_ENDPOINT}`;
+};
 
 type ExtractVariables<T> = T extends { variables: object }
   ? T["variables"]
@@ -680,8 +687,8 @@ export async function getAllProductUrls(): Promise<Product[]> {
     { key: "limit", value: "48" },
   ];
 
-  const domain = process.env.BAGISTO_STORE_DOMAIN || "https://demo.halalbizs.com";
-  const res = await fetch(`${domain}/graphql`, {
+  const graphqlEndpoint = getBagistoEndpoint();
+  const res = await fetch(graphqlEndpoint, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
