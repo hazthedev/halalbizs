@@ -89,7 +89,7 @@ import { getProductsUrlQuery } from "./queries/product/product-urls";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
 
-const domain = process.env.BAGISTO_STORE_DOMAIN || "";
+const domain = process.env.BAGISTO_STORE_DOMAIN || "https://demo.halalbizs.com";
 
 const endpoint = `${domain}${BAGISTO_GRAPHQL_API_ENDPOINT}`;
 
@@ -680,7 +680,8 @@ export async function getAllProductUrls(): Promise<Product[]> {
     { key: "limit", value: "48" },
   ];
 
-  const res = await fetch(`${process.env.BAGISTO_STORE_DOMAIN}/graphql`, {
+  const domain = process.env.BAGISTO_STORE_DOMAIN || "https://demo.halalbizs.com";
+  const res = await fetch(`${domain}/graphql`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
