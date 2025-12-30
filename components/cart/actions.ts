@@ -1,5 +1,5 @@
 "use server";
-import { revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -42,7 +42,7 @@ export async function addItem(
       selectedConfigurableOption,
       superAttribute: input.superAttribute ?? [],
     });
-    revalidateTag(TAGS.cart);
+    revalidatePath("/");
   } catch (e) {
     return "Error adding item to cart";
   }
@@ -72,7 +72,7 @@ export async function removeItem(prevState: any, lineId: number) {
 
   try {
     await removeFromCart(Number(lineId));
-    revalidateTag(TAGS.cart);
+    revalidatePath("/");
   } catch (e) {
     return "Error removing item from cart";
   }
@@ -97,7 +97,7 @@ export async function updateItemQuantity(
   try {
     if (quantity === 0) {
       await removeFromCart(Number(lineId));
-      revalidateTag(TAGS.cart);
+      revalidatePath("/");
 
       return;
     }
@@ -108,7 +108,7 @@ export async function updateItemQuantity(
         quantity,
       },
     ]);
-    revalidateTag(TAGS.cart);
+    revalidatePath("/");
   } catch (e) {
     return "Error updating item quantity";
   }

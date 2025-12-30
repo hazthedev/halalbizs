@@ -1,5 +1,5 @@
 "use server";
-import { revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 
 import { addCheckoutAddress, updateCustomerAddress } from "@/lib/bagisto";
 import { TAGS } from "@/lib/constants";
@@ -83,7 +83,7 @@ export async function updateAddress(prevState: any, formData: FormData) {
   });
 
   if (isObject(result?.updateAddress)) {
-    revalidateTag(TAGS.address);
+    revalidatePath("/checkout");
 
     return {
       errors: {},

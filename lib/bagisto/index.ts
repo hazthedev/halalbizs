@@ -1,4 +1,4 @@
-import { revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 import { cookies, headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import lruCache from "../lru";
@@ -377,7 +377,7 @@ export async function addShippingMethod(input: {
     cache: "no-store",
   });
 
-  revalidateTag(TAGS.cart);
+  revalidatePath("/");
 
   return reshapePayments(res.body.data.saveShipping);
 }
@@ -1060,11 +1060,11 @@ export async function revalidate(req: NextRequest): Promise<NextResponse> {
   }
 
   if (isCollectionUpdate) {
-    revalidateTag(TAGS.collections);
+    revalidatePath("/search");
   }
 
   if (isProductUpdate) {
-    revalidateTag(TAGS.products);
+    revalidatePath("/product");
   }
 
   return NextResponse.json({ status: 200, revalidated: true, now: Date.now() });
