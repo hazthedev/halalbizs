@@ -3,6 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { bagistoFetch } from "@/lib/bagisto";
 import { CustomerLogin } from "@/lib/bagisto/mutations/customer-login";
 import { isObject } from "@/lib/type-guards";
+
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -59,7 +60,10 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET || "fallback-secret-key-change-in-production",
+  session: {
+    strategy: "jwt",
+  },
   callbacks: {
     jwt: async ({ token, user }) => {
       if (isObject(user) && user.token) {
@@ -86,4 +90,5 @@ export const authOptions: NextAuthOptions = {
     error: "/login",
   },
 };
+
 export const handler = NextAuth(authOptions);
