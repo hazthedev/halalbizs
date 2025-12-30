@@ -6,7 +6,11 @@ const nextConfig = {
         remotePatterns: [
             {
                 protocol: "https",
-                hostname: process.env.IMAGE_DOMAIN,
+                hostname: process.env.IMAGE_DOMAIN || "demo.halalbizs.com",
+            },
+            {
+                protocol: "https",
+                hostname: "**.demo.halalbizs.com",
             },
         ],
     },
@@ -15,9 +19,6 @@ const nextConfig = {
         BAGISTO_STORE_DOMAIN: process.env.BAGISTO_STORE_DOMAIN,
         REVALIDATION_DURATION: process.env.REVALIDATION_DURATION,
         SITE_NAME: process.env.SITE_NAME,
-    },
-    eslint: {
-        ignoreDuringBuilds: true,
     },
     async headers() {
         return [
